@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>সার্টিফিকেট ডাউনলোড পোর্টাল</title>
+    <title>Certificate Verification & Download Portal</title>
+    <!-- স্টাইলিশ সার্টিফিকেট ফন্টের জন্য Google Font যুক্ত করা হলো -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@600&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background: #ffffff; width: 100%; max-width: 700px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
-        h2 { color: #333; margin-bottom: 10px; }
+        .container { background: #ffffff; width: 100%; max-width: 750px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        h2 { color: #1b4d3e; margin-bottom: 10px; }
         p.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
         .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
         input[type="text"] { flex: 1; padding: 12px 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 6px; outline: none; }
-        input[type="text"]:focus { border-color: #28a745; }
-        button { padding: 12px 25px; font-size: 16px; font-weight: bold; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #218838; }
+        input[type="text"]:focus { border-color: #1b4d3e; }
+        button { padding: 12px 25px; font-size: 16px; font-weight: bold; background: #1b4d3e; color: white; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #12352b; }
         #message { font-size: 16px; margin-bottom: 15px; font-weight: bold; }
         .error { color: #dc3545; }
         .success { color: #28a745; }
@@ -25,12 +27,12 @@
 <body>
 
 <div class="container">
-    <h2>সার্টিফিকেট সংগ্রহ করুন</h2>
-    <p class="subtitle">আপনার আইডি, রেজিস্ট্রেশন নাম্বার, ইমেইল অথবা ফোন নাম্বার দিয়ে সার্চ করুন</p>
+    <h2>EBAUB Business Club & YSSE</h2>
+    <p class="subtitle">আপনার আইডি, রেজিস্ট্রেশন নাম্বার, ইমেইল অথবা ফোন নাম্বার দিয়ে সার্টিফিকেট সংগ্রহ করুন</p>
     
     <div class="search-box">
         <input type="text" id="userInput" placeholder="আইডি, ইমেইল বা ফোন নম্বর লিখুন...">
-        <button onclick="searchCertificate()">খুঁজুন</button>
+        <button onclick="searchCertificate()">সার্চ করুন</button>
     </div>
     
     <div id="message"></div>
@@ -42,10 +44,10 @@
 </div>
 
 <script>
-   
+    // আপনার দেওয়া নির্দিষ্ট Web App URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSJXwKyQxOeb_oA8r1oo_SxbtjGJt-_fn3oIcmeg_CvVwzBR93AUHO6V0LnEUBOcGLZw/exec";
     
-   
+    // আপনার সার্টিফিকেট ইমেজের ফাইলের নাম (যেটি গিটহাবে আপলোড করবেন)
     const CERT_IMAGE_SRC = "certificate.png";
 
     async function searchCertificate() {
@@ -72,7 +74,7 @@
                 msgDiv.innerText = `অভিনন্দন ${data.name}! আপনার সার্টিফিকেট পাওয়া গেছে।`;
                 generateCertificate(data.name);
             } else {
-                msgDiv.className = "error";
+                msgDiv.className, msgDiv.className = "error";
                 msgDiv.innerText = "দুঃখিত! এই তথ্যের বিপরীতে কোনো সার্টিফিকেট পাওয়া যায়নি। সঠিক তথ্য দিন।";
             }
         } catch (error) {
@@ -92,17 +94,17 @@
             canvas.width = img.width;
             canvas.height = img.height;
             
-       
+            // ব্যাকগ্রাউন্ড সার্টিফিকেট ইমেজ আঁকা
             ctx.drawImage(img, 0, 0);
 
-          
-            ctx.font = "bold 150px 'Segoe UI', Arial, sans-serif"; 
-            ctx.fillStyle = "#111111"; 
+            // সার্টিফিকেটে নামের জন্য স্টাইলিশ ফন্ট ও কালার (সার্টিফিকেটের থিমের সাথে সামঞ্জস্যপূর্ণ গাঢ় সবুজ কালার)
+            ctx.font = "bold 150px 'Cinzel', 'Great Vibes', Arial, sans-serif"; 
+            ctx.fillStyle = "#1b4d3e"; 
             ctx.textAlign = "center";
             
-           
+            // সার্টিফিকেটের "NAME" লেখা অংশটির পজিশন অনুযায়ী নিখুঁত মাপ (Y অক্ষের পজিশন প্রয়োজন হলে একটু কম/বেশি করতে পারেন)
             const textX = canvas.width / 2;
-            const textY = canvas.height * 0.48; 
+            const textY = canvas.height * 0.42; 
 
             ctx.fillText(userName, textX, textY);
             
@@ -113,7 +115,7 @@
     function downloadCertificate() {
         const canvas = document.getElementById('certCanvas');
         const link = document.createElement('a');
-        link.download = 'Certificate.png';
+        link.download = 'Certificate_EBAUB_YSSE.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
     }
