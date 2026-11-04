@@ -42,10 +42,10 @@
 </div>
 
 <script>
-    // ১. এখানে আপনার নতুন Google Web App URL বসান
+   
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSJXwKyQxOeb_oA8r1oo_SxbtjGJt-_fn3oIcmeg_CvVwzBR93AUHO6V0LnEUBOcGLZw/exec";
     
-    // ২. আপনার সার্টিফিকেট ইমেজের ফাইলের নাম
+   
     const CERT_IMAGE_SRC = "certificate.png";
 
     async function searchCertificate() {
@@ -92,15 +92,15 @@
             canvas.width = img.width;
             canvas.height = img.height;
             
-            // ব্যাকগ্রাউন্ড সার্টিফিকেট ইমেজ আঁকা
+       
             ctx.drawImage(img, 0, 0);
 
-            // সার্টিফিকেটে নামের স্টাইল
+          
             ctx.font = "bold 50px 'Segoe UI', Arial, sans-serif"; 
             ctx.fillStyle = "#111111"; 
             ctx.textAlign = "center";
             
-            // সার্টিফিকেটে নাম বসানোর পজিশন (প্রয়োজনমতো Y এর মান পরিবর্তন করতে পারেন)
+           
             const textX = canvas.width / 2;
             const textY = canvas.height * 0.48; 
 
