@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সার্টিফিকেট ডাউনলোড পোর্টাল</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background: #ffffff; width: 100%; max-width: 700px; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; }
+        h2 { color: #333; margin-bottom: 10px; }
+        p.subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+        .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        input[type="text"] { flex: 1; padding: 12px 15px; font-size: 16px; border: 2px solid #ddd; border-radius: 6px; outline: none; }
+        input[type="text"]:focus { border-color: #28a745; }
+        button { padding: 12px 25px; font-size: 16px; font-weight: bold; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #218838; }
+        #message { font-size: 16px; margin-bottom: 15px; font-weight: bold; }
+        .error { color: #dc3545; }
+        .success { color: #28a745; }
+        #preview-area { display: none; margin-top: 20px; }
+        canvas { max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>সার্টিফিকেট সংগ্রহ করুন</h2>
+    <p class="subtitle">আপনার আইডি, রেজিস্ট্রেশন নাম্বার, ইমেইল অথবা ফোন নাম্বার দিয়ে সার্চ করুন</p>
+    
+    <div class="search-box">
+        <input type="text" id="userInput" placeholder="আইডি, ইমেইল বা ফোন নম্বর লিখুন...">
+        <button onclick="searchCertificate()">খুঁজুন</button>
+    </div>
+    
+    <div id="message"></div>
+
+    <div id="preview-area">
+        <canvas id="certCanvas"></canvas> <br>
+        <button onclick="downloadCertificate()">ডাউনলোড সার্টিফিকেট (PNG)</button>
+    </div>
+</div>
+
+<script>
+    // ১. এখানে আপনার নতুন Google Web App URL বসান
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSJXwKyQxOeb_oA8r1oo_SxbtjGJt-_fn3oIcmeg_CvVwzBR93AUHO6V0LnEUBOcGLZw/exec";
+    
+    // ২. আপনার সার্টিফিকেট ইমেজের ফাইলের নাম
+    const CERT_IMAGE_SRC = "certificate.png";
+
+    async function searchCertificate() {
+        const inputVal = document.getElementById('userInput').value.trim();
+        const msgDiv = document.getElementById('message');
+        const previewArea = document.getElementById('preview-area');
+        
+        if (!inputVal) {
+            msgDiv.className = "error";
+            msgDiv.innerText = "দয়া করে আপনার তথ্য ইনপুট দিন!";
+            return;
+        }
+
+        msgDiv.className = "";
+        msgDiv.innerText = "যাচাই করা হচ্ছে...";
+        previewArea.style.display = "none";
+
+        try {
+            const response = await fetch(`${SCRIPT_URL}?q=${encodeURIComponent(inputVal)}`);
+            const data = await response.json();
+
+            if (data.found) {
+                msgDiv.className = "success";
+                msgDiv.innerText = `অভিনন্দন ${data.name}! আপনার সার্টিফিকেট পাওয়া গেছে।`;
+                generateCertificate(data.name);
+            } else {
+                msgDiv.className = "error";
+                msgDiv.innerText = "দুঃখিত! এই তথ্যের বিপরীতে কোনো সার্টিফিকেট পাওয়া যায়নি। সঠিক তথ্য দিন।";
+            }
+        } catch (error) {
+            msgDiv.className = "error";
+            msgDiv.innerText = "কোনো সমস্যা হয়েছে! পরে আবার চেষ্টা করুন।";
+            console.error(error);
+        }
+    }
+
+    function generateCertificate(userName) {
+        const canvas = document.getElementById('certCanvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.src = CERT_IMAGE_SRC;
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // ব্যাকগ্রাউন্ড সার্টিফিকেট ইমেজ আঁকা
+            ctx.drawImage(img, 0, 0);
+
+            // সার্টিফিকেটে নামের স্টাইল
+            ctx.font = "bold 50px 'Segoe UI', Arial, sans-serif"; 
+            ctx.fillStyle = "#111111"; 
+            ctx.textAlign = "center";
+            
+            // সার্টিফিকেটে নাম বসানোর পজিশন (প্রয়োজনমতো Y এর মান পরিবর্তন করতে পারেন)
+            const textX = canvas.width / 2;
+            const textY = canvas.height * 0.48; 
+
+            ctx.fillText(userName, textX, textY);
+            
+            document.getElementById('preview-area').style.display = "block";
+        };
+    }
+
+    function downloadCertificate() {
+        const canvas = document.getElementById('certCanvas');
+        const link = document.createElement('a');
+        link.download = 'Certificate.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+</script>
+
+</body>
+</html>
